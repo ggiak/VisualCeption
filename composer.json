@@ -2,7 +2,7 @@
   "name": "codeception/visualception",
   "description": "Visual regression tests for Codeception",
   "homepage": "https://github.com/Codeception/VisualCeption",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "require": {
     "php": ">=5.4.0",
     "ext-imagick": "*"
