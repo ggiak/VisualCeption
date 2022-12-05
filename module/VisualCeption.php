@@ -22,7 +22,7 @@ use Codeception\TestInterface;
  */
 class VisualCeption extends CodeceptionModule implements MultiSession
 {
-    protected $config = [
+    protected array $config = [
         'maximumDeviation' => 0,
         'saveCurrentImageIfFailure' => true,
         'referenceImageDir' => 'VisualCeption/',
@@ -573,7 +573,7 @@ class VisualCeption extends CodeceptionModule implements MultiSession
     /**
      * Get a new loaded module
      */
-    public function _initializeSession()
+    public function _initializeSession(): void
     {
         $browserModule = $this->getBrowserModule();
 
@@ -586,7 +586,7 @@ class VisualCeption extends CodeceptionModule implements MultiSession
      *
      * @param $session
      */
-    public function _loadSession($session)
+    public function _loadSession($session): void
     {
         $this->webDriver = $session;
     }
@@ -601,7 +601,7 @@ class VisualCeption extends CodeceptionModule implements MultiSession
         return $this->webDriver;
     }
 
-    public function _closeSession($session = null)
+    public function _closeSession($session = null): void
     {
         // this method will never be needed
     }
