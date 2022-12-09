@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Codeception\Module;
 
+use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ImageDeviationException;
 use Codeception\Module as CodeceptionModule;
@@ -427,10 +428,12 @@ class VisualCeption extends CodeceptionModule
      */
     private function createScreenshot($identifier, array $coords, array $excludeElements = array())
     {
-        $screenShotDir = \Codeception\Configuration::logDir() . 'debug/';
+        $screenShotDir = Configuration::outputDir() . 'debug/';
 
         if (!is_dir($screenShotDir)) {
-            mkdir($screenShotDir, 0777, true);
+            if (!mkdir($screenShotDir, 0777, true) && !is_dir($screenShotDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $screenShotDir));
+            }
         }
 
         $elementPath = $this->getScreenshotPath($identifier);
@@ -510,7 +513,7 @@ class VisualCeption extends CodeceptionModule
      */
     private function getDeviationScreenshotPath ($identifier, $alternativePrefix = '')
     {
-        $debugDir = \Codeception\Configuration::logDir() . 'debug/';
+        $debugDir = Configuration::outputDir() . 'debug/';
         $prefix = ( $alternativePrefix === '') ? 'compare' : $alternativePrefix;
         return $debugDir . $prefix . $this->getScreenshotName($identifier);
     }
@@ -583,7 +586,7 @@ class VisualCeption extends CodeceptionModule
         if ($this->currentEnvironment) {
             $filename .= '.' . $this->currentEnvironment;
         }
-        $this->logFile = \Codeception\Configuration::logDir() . $filename . '.html';
+        $this->logFile = Configuration::outputDir() . $filename . '.html';
 
         if (array_key_exists('templateVars', $this->config)) {
             $this->templateVars = $this->config["templateVars"];
@@ -592,7 +595,7 @@ class VisualCeption extends CodeceptionModule
         if (array_key_exists('templateFile', $this->config)) {
             $this->templateFile = (file_exists($this->config["templateFile"]) ? "" : __DIR__ ) . $this->config["templateFile"];
         } else {
-            $this->templateFile = __DIR__ . "/report/template.php";
+            $this->templateFile = __DIR__ . "/Report/template.php";
         }
         $this->debug( "VisualCeptionReporter: templateFile = " . $this->templateFile );
     }
