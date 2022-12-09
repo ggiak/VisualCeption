@@ -6,6 +6,7 @@ namespace Codeception\Module;
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ImageDeviationException;
+use Codeception\Lib\Interfaces\Remote;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Test\Descriptor;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -35,22 +36,29 @@ class VisualCeption extends CodeceptionModule
         'module' => 'WebDriver',
         'fullScreenShot' => false
     ];
-    
-    protected $saveCurrentImageIfFailure;
-    private $referenceImageDir;
+
+    /**
+     * @var
+     */
+    protected bool $saveCurrentImageIfFailure;
+
+    /**
+     * @var
+     */
+    private string $referenceImageDir;
 
     /**
      * This var represents the directory where the taken images are stored
      * @var string
      */
-    private $currentImageDir;
+    private string $currentImageDir;
 
-    private $maximumDeviation = 0;
+    private int $maximumDeviation = 0;
 
     /**
      * @var RemoteWebDriver
      */
-    private $webDriver = null;
+    private Remote = null;
 
     /**
      * @var WebDriver
@@ -72,9 +80,9 @@ class VisualCeption extends CodeceptionModule
      */
     private $currentEnvironment;
 
-    private $failed = array();
+    private $failed = [];
     private $logFile;
-    private $templateVars = array();
+    private $templateVars = [];
     private $templateFile;
 
     /**
@@ -99,7 +107,7 @@ class VisualCeption extends CodeceptionModule
 
     public function _beforeSuite($settings = [])
     {
-        $this->currentEnvironment = key_exists('current_environment', $settings) ? $settings['current_environment'] : null;
+        $this->currentEnvironment = $settings['current_environment'] ?? null;
         $this->_initVisualReport();
     }
 
@@ -140,7 +148,7 @@ class VisualCeption extends CodeceptionModule
      * @param TestInterface $test
      * @throws \Exception
      */
-    public function _before(TestInterface $test)
+    public function _before(TestInterface $test): void
     {
         $browserModule = $this->getBrowserModule();
 
@@ -161,7 +169,8 @@ class VisualCeption extends CodeceptionModule
      * @return \Codeception\Module|\Facebook\WebDriver\WebDriver|null
      * @throws \Codeception\Exception\ModuleException
      */
-    protected function getBrowserModule() {
+    protected function getBrowserModule(): CodeceptionModule|WebDriver|null
+    {
         if ($this->hasModule($this->config['module'])) {
             return $this->getModule($this->config['module']);
         }
@@ -197,7 +206,7 @@ class VisualCeption extends CodeceptionModule
      * @param string|array $excludeElements Element name or array of Element names, which should not appear in the screenshot
      * @param float $deviation 
      */
-    public function seeVisualChanges($identifier, $elementID = null, $excludeElements = array(), $deviation = null)
+    public function seeVisualChanges($identifier, $elementID = null, $excludeElements = [], $deviation = null): void
     {
         $this->compareVisualChanges($identifier, $elementID, $excludeElements, $deviation, true);
 
@@ -215,7 +224,7 @@ class VisualCeption extends CodeceptionModule
      * @param string|array $excludeElements string of Element name or array of Element names, which should not appear in the screenshot
      * @param float|null $deviation
      */
-    public function dontSeeVisualChanges(string $identifier, string $elementID = null, array|string $excludeElements = array(), float $deviation = null): void
+    public function dontSeeVisualChanges(string $identifier, string $elementID = null, array|string $excludeElements = [], float $deviation = null): void
     {
         $this->compareVisualChanges($identifier, $elementID, $excludeElements, $deviation, false);
 
@@ -311,14 +320,13 @@ class VisualCeption extends CodeceptionModule
     }
 
     /**
-     * Compares the two images and calculate the deviation between expected and actual image
-     *
-     * @param string $identifier Identifies your test object
-     * @param string $elementID DOM ID of the element, which should be screenshotted
-     * @param array $excludeElements Element names, which should not appear in the screenshot
-     * @return array Includes the calculation of deviation in percent and the diff-image
+     * @param $identifier
+     * @param $elementID
+     * @param array $excludeElements
+     * @return array
+     * @throws \Exception
      */
-    private function getDeviation($identifier, $elementID, array $excludeElements = array())
+    private function getDeviation($identifier, $elementID, array $excludeElements = []): array
     {
         $coords = $this->getCoordinates($elementID);
         $this->createScreenshot($identifier, $coords, $excludeElements);
@@ -329,11 +337,11 @@ class VisualCeption extends CodeceptionModule
 
         $this->debug("The deviation between the images is ". $deviation . " percent");
 
-        return array (
+        return [
             "deviation" => $deviation,
             "deviationImage" => $compareResult[0],
             "currentImage" => $compareResult['currentImage'],
-        );
+        ];
     }
 
     /**
@@ -426,7 +434,7 @@ class VisualCeption extends CodeceptionModule
      * @param array $excludeElements List of elements, which should not appear in the screenshot
      * @return string Path of the current screenshot image
      */
-    private function createScreenshot($identifier, array $coords, array $excludeElements = array())
+    private function createScreenshot($identifier, array $coords, array $excludeElements = [])
     {
         $screenShotDir = Configuration::outputDir() . 'debug/';
 
@@ -535,10 +543,10 @@ class VisualCeption extends CodeceptionModule
         if (!file_exists($expectedImagePath)) {
             $this->debug("Copying image (from $currentImagePath to $expectedImagePath");
             copy($currentImagePath, $expectedImagePath);
-            return array (null, 0, 'currentImage' => null);
-        } else {
-            return $this->compareImages($expectedImagePath, $currentImagePath);
+            return [null, 0, 'currentImage' => null];
         }
+
+        return $this->compareImages($expectedImagePath, $currentImagePath);
     }
 
     /**
@@ -577,7 +585,7 @@ class VisualCeption extends CodeceptionModule
         return $result;
     }
 
-    protected function _initVisualReport()
+    protected function _initVisualReport(): void
     {
         if (!$this->config['report']) {
             return;
@@ -595,7 +603,7 @@ class VisualCeption extends CodeceptionModule
         if (array_key_exists('templateFile', $this->config)) {
             $this->templateFile = (file_exists($this->config["templateFile"]) ? "" : __DIR__ ) . $this->config["templateFile"];
         } else {
-            $this->templateFile = __DIR__ . "/Report/template.php";
+            $this->templateFile = __DIR__ . "/../Report/template.php";
         }
         $this->debug( "VisualCeptionReporter: templateFile = " . $this->templateFile );
     }
@@ -624,9 +632,9 @@ class VisualCeption extends CodeceptionModule
     /**
      * Returns current WebDriver session for saving
      *
-     * @return RemoteWebDriver
+     * @return \Facebook\WebDriver\Remote\RemoteWebDriver|null
      */
-    public function _backupSession()
+    public function _backupSession(): ?RemoteWebDriver
     {
         return $this->webDriver;
     }
