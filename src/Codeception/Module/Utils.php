@@ -1,6 +1,6 @@
 <?php
 
-namespace Codeception\Module\VisualCeption;
+namespace Codeception\Module;
 
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
