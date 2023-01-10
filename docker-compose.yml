@@ -4,7 +4,7 @@ services:
   php:
     build:
       context: ./docker/php
-#    command: bash -c 'cd /project && composer install && php vendor/bin/codecept build -c tests/integration/ && php vendor/bin/codecept run -c tests/integration/ && vendor/bin/phpunit tests/unit/'
+    #command: bash -c 'cd /project && composer install && php vendor/bin/codecept build -c tests/integration/ && php vendor/bin/codecept run -c tests/integration/ && vendor/bin/phpunit tests/unit/'
     volumes:
       - ./:/project
     depends_on:

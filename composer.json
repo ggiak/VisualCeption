@@ -7,15 +7,15 @@
   "license": "Apache-2.0",
   "require": {
     "php": ">=8.0",
-    "codeception/codeception": "^5.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.5",
-    "codeception/module-webdriver": "^3.2",
     "ext-imagick": "*",
     "ext-mbstring": "*",
     "ext-zip": "*",
-    "ext-xml": "*"
+    "ext-xml": "*",
+    "codeception/codeception": "^5.0",
+    "codeception/module-webdriver": "^3.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "classmap": [

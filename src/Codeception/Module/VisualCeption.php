@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ImageDeviationException;
@@ -23,7 +24,7 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
  * @author Sebastian Neubert
  * @author Ray Romanov
  */
-class VisualCeption extends CodeceptionModule
+class VisualCeption extends CodeceptionModule implements MultiSession
 {
     /**
      * @var array
@@ -87,22 +88,22 @@ class VisualCeption extends CodeceptionModule
     /**
      * @var array
      */
-    private $failed = [];
+    private array $failed = [];
 
     /**
-     * @var
+     * @var string
      */
-    private $logFile;
+    private string $logFile;
 
     /**
      * @var array
      */
-    private $templateVars = [];
+    private array $templateVars = [];
 
     /**
-     * @var
+     * @var string
      */
-    private $templateFile;
+    private string $templateFile;
 
     /**
      * @return void

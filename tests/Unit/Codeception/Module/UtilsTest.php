@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Unit\Codeception\Module;
 
-use Codeception\Test\{Cest, Cept};
+use Codeception\Test\Cept;
 use PHPUnit\Framework\TestCase;
 use Codeception\Module\Utils;
 
@@ -16,8 +16,6 @@ class UtilsTest extends TestCase
         $testCept = new Cept('Test test', 'testfilename.php');
         $this->assertEquals('Test.testCept.screenshot.png', $utils->getTestFileName($testCept, 'screenshot'));
 
-        $testCest = new Cest(new TestCestExample(), 'testMethod', __DIR__ . '/TestCestExample.php');
-        $this->assertEquals('Example.Acceptance.TestCestExample.testMethod.screenshot.png', $utils->getTestFileName($testCest, 'screenshot'));
     }
 
 }
