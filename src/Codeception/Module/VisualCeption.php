@@ -7,10 +7,8 @@ use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException;
 use Codeception\Exception\ImageDeviationException;
 use Codeception\Module as CodeceptionModule;
-use Codeception\Module\WebDriver;
 use Codeception\Test\Descriptor;
 use Codeception\TestInterface;
-use Codeception\Module\WebDriver;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 
 /**
@@ -62,12 +60,12 @@ class VisualCeption extends CodeceptionModule
     private float $maximumDeviation = 0.0;
 
     /**
-     * @var RemoteWebDriver|null
+     * @var ?RemoteWebDriver
      */
     private ?RemoteWebDriver $webDriver = null;
 
     /**
-     * @var \Codeception\Module\WebDriver|null
+     * @var ?\Codeception\Module\WebDriver
      */
     private ?WebDriver $webDriverModule = null;
 
@@ -82,9 +80,9 @@ class VisualCeption extends CodeceptionModule
     private TestInterface $test;
 
     /**
-     * @var string
+     * @var ?string
      */
-    private string $currentEnvironment;
+    private ?string $currentEnvironment;
 
     /**
      * @var array
