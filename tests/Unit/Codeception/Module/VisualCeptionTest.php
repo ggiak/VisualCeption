@@ -19,5 +19,12 @@ class VisualCeptionTest extends TestCase
         $this->module = new VisualCeption($container);
     }
 
+    /**
+     * @return void
+     */
+    public function testNoTestsFoundOnThisFileWarning(): void
+    {
+        $this->assertTrue(true);
+    }
 
 }

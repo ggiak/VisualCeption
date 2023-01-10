@@ -9,11 +9,13 @@
     "php": ">=8.0",
     "ext-imagick": "*",
     "ext-mbstring": "*",
-    "codeception/codeception": "^5.0"
+    "ext-zip": "*",
+    "ext-xml": "*",
+    "codeception/codeception": "^5.0",
+    "codeception/module-webdriver": "^3.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5",
-    "codeception/module-webdriver": "^3.2"
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "classmap": [
