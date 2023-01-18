@@ -36,7 +36,8 @@ class VisualCeption extends CodeceptionModule implements MultiSession
         'currentImageDir' => 'debug/visual/',
         'report' => false,
         'module' => 'WebDriver',
-        'fullScreenShot' => false
+        'fullScreenShot' => false,
+        'forceFullScreenShot' => false,
     ];
 
     /**
@@ -455,6 +456,7 @@ class VisualCeption extends CodeceptionModule implements MultiSession
      * @param array $coords Coordinates where the DOM element is located
      * @param array $excludeElements List of elements, which should not appear in the screenshot
      * @return string Path of the current screenshot image
+     * @throws \ImagickException
      */
     private function createScreenshot($identifier, array $coords, array $excludeElements = [])
     {
@@ -471,13 +473,13 @@ class VisualCeption extends CodeceptionModule implements MultiSession
 
         $this->hideElementsForScreenshot($excludeElements);
 
-        if ($this->config["fullScreenShot"] == true) {
+        if ($this->config["fullScreenShot"] === true || $this->config["forceFullScreenShot"] === true) {
             $height = $this->webDriver->executeScript("var ele=document.querySelector('html'); return ele.scrollHeight;");
             list($viewportHeight, $devicePixelRatio) = $this->webDriver->executeScript("return [window.innerHeight, window.devicePixelRatio]");
 
             $itr = $height / $viewportHeight;
 
-            for ($i = 0; $i < intval($itr); $i++) {
+            for ($i = 0; $i < (int)$itr; $i++) {
                 $screenshotBinary = $this->webDriver->takeScreenshot();
                 $screenShotImage->readimageblob($screenshotBinary);
                 $this->webDriver->executeScript("window.scrollBy(0, {$viewportHeight});");
@@ -491,6 +493,13 @@ class VisualCeption extends CodeceptionModule implements MultiSession
             $screenShotImage->resetIterator();
             $fullShot = $screenShotImage->appendImages(true);
             $fullShot->writeImage($elementPath);
+
+            if ($this->config["fullScreenShot"] !== true) {
+                $fullShot->cropImage($coords['width'], $coords['height'], $coords['offset_x'], $coords['offset_y']);
+            }
+            $fullShot->writeImage($elementPath);
+
+            $this->webDriver->executeScript("window.scrollTo(0, 0);");
 
         } else {
             $screenshotBinary = $this->webDriver->takeScreenshot();

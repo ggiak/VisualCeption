@@ -7,7 +7,7 @@ use Codeception\Scenario;
 
 class TestCestExample
 {
-    public function testMethod($I, Scenario $scenario)
+    public function testMethod($I, Scenario $scenario): void
     {
     }
 }
