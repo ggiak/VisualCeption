@@ -495,7 +495,7 @@ class VisualCeption extends CodeceptionModule implements MultiSession
             $fullShot->writeImage($elementPath);
 
             if ($this->config["fullScreenShot"] !== true) {
-                $fullShot->cropImage($coords['width'], $coords['height'], $coords['offset_x'], $coords['offset_y']);
+                $fullShot->cropImage((int)$coords['width'], (int)$coords['height'], (int)$coords['offset_x'], (int)$coords['offset_y']);
             }
             $fullShot->writeImage($elementPath);
 
@@ -505,7 +505,7 @@ class VisualCeption extends CodeceptionModule implements MultiSession
             $screenshotBinary = $this->webDriver->takeScreenshot();
 
             $screenShotImage->readimageblob($screenshotBinary);
-            $screenShotImage->cropImage($coords['width'], $coords['height'], $coords['offset_x'], $coords['offset_y']);
+            $screenShotImage->cropImage((int)$coords['width'], (int)$coords['height'], (int)$coords['offset_x'], (int)$coords['offset_y']);
             $screenShotImage->writeImage($elementPath);
         }
 
