@@ -4,5 +4,6 @@
 .settings/
 vendor/
 tests/integration/tests/_log/
-tests/integration/tests/_helpers/
+tests/integration/tests/_helpers/*
+!tests/integration/tests/_helpers/WebGuy.php
 tests/integration/tests/_data/VisualCeption/SimpleCept.SimpleBlock.png
